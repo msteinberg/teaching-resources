@@ -1,0 +1,109 @@
+---
+title: "Visualizations in R: Part 1"
+author: "Mia"
+date: "2022-10-31"
+output: html_presentation
+---
+
+
+```{r}
+library(tidyverse)
+ggplot(mpg, aes(x = hwy, y = cty, color = cyl)) +
+  geom_point() +
+  labs(x = "Highway Miles", y = "City Miles", title = "City Miles as a Function of Highway Miles and Cylinders")
+```
+
+
+```{r}
+ggplot(mpg, aes(x = hwy, y = cty, color = cyl)) +
+  geom_point() +
+  labs(x = "Highway Miles", y = "City Miles", title = "City Miles as a Function of Highway Miles and Cylinders")
+```
+
+```{r}
+ggplot(mpg, aes(x = hwy, y = cty, color = cyl)) +
+  geom_point() +
+  xlab("Highway Miles") + ylab("City Miles") + ggtitle("City Miles as a Function of Highway Miles and Cylinders")
+  
+```
+
+
+```{r}
+ggplot(mpg, aes(x = hwy, y = cty, color = cyl)) +
+  geom_smooth(method = "lm") +
+  geom_point() +
+  labs(x = "Highway Miles", y = "City Miles", title = "City Miles as a Function of Highway Miles and Cylinders")
+```
+```{r}
+ggplot(students, aes(expertise_linear, expertise_SPSS)) +
+  geom_jitter() +
+   geom_point()
+```
+   
+```{r}
+library(gapminder)
+gapminder %>% filter(year == 2007, continent == "Americas") %>%
+  ggplot(g2007, mapping = aes(x = gdpPercap, y = lifeExp, color = country, size = pop)) + 
+  geom_point()
+```
+
+
+```{r}
+library(gapminder)
+gapminder %>% filter(year == 2007, country == "United States" | country == "Mexico" | country == "Canada") %>%
+  ggplot(aes(x = country, y = lifeExp)) +
+  stat_summary(fun = "mean", geom = "bar")
+  stat_summary(fun = mean, geom = "bar", fill = "White", colour = "Black" )
+```
+
+```{r}
+gapminder %>% 
+  ggplot(aes(x = year, y = lifeExp, fill = continent)) +
+  stat_summary(fun = "mean", geom = "bar", position = position_dodge2())
+```
+
+```{r}
+gapminder %>% 
+  filter(year == 2007) %>% 
+  ggplot(aes(x = continent, y = lifeExp)) +
+  stat_summary(fun = "mean", geom = "bar", alpha = .7) +
+  stat_summary(fun = "mean", geom = "point", 
+               size = 1) +
+  stat_summary(fun.data = "mean_cl_normal",
+               geom = "errorbar",
+               width = .2) 
+```
+```{r}
+library(gapminder)
+gapminder %>% filter(year == 2007) %>%
+  ggplot(aes(x = continent, y = lifeExp)) +
+  geom_boxplot()
+```
+
+
+```{r}
+ggplot(mpg, aes(cty, hwy)) + 
+  geom_point() +
+  facet_grid(cols = vars(fl))
+```
+
+```{r}
+gap2007 <- gapminder %>% filter(year == 2007)
+# fit data to a linear model
+linear_model <- lm(lifeExp ~ gdpPercap, gap2007)
+
+# load library ggplot2
+library(ggplot2)
+
+# create dataframe with actual and predicted values
+plot_data <- data.frame(Predicted_value = predict(linear_model),
+					Observed_value = gap2007$lifeExp)
+
+# plot predicted values and actual values
+ggplot(plot_data, aes(x = Predicted_value, y = Observed_value)) +
+				geom_point() +
+        geom_jitter() +
+				geom_abline(intercept = 0, slope = 1, color = "red") +
+        xlab("Predicted life expectancy") + ylab("Actual life expectancy")
+  
+```
