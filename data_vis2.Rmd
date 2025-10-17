@@ -1,0 +1,82 @@
+---
+title: "visualization exercise"
+author: "Mia"
+date: "2022-09-26"
+output: html_document
+---
+
+
+# Load gapminder data (gapminder.org) https://vincentarelbundock.github.io/Rdatasets/datasets.html  
+ - print out column names  
+ - open dataset in view tab  
+```{r load_data}
+library(tidyverse)
+gapminder <- read_csv("https://vincentarelbundock.github.io/Rdatasets/csv/causaldata/gapminder.csv")
+names(gapminder)
+view(gapminder)
+```
+
+# Create a new dataset with just the Americas
+```{r americas}
+americas <- filter(gapminder, continent == "Americas")
+```
+
+
+# remove gdpPercap
+*The select function takes the dataset as the first argument, and then the names of the columns you want to select as the second argument.*  
+*ex: select (dataset, col1, col2, col3)*
+*to remove a column, simply put a minus sign before the column name*
+```{r remove_gdp}
+americas_nogdp <- select(americas, -gdpPercap)
+```
+
+
+# Create a new column called col1 that has the value of 1
+*The mutate function takes the dataset as the first argument, and then the name of your new column and the formula for setting its vale.*  
+*ex: mutate(dataset, newcolname = col1 + col2)*
+```{r newcol}
+americas_nogdp <- mutate(americas_nogdp, col1 = 1)
+
+```
+
+
+
+# Create a new column based on whether life expectancy was over 60 that year or not  
+*We're going to use the if_else statement here which follows this format: * 
+  *- if_else(statement to test, value if it's true, value if it's false)*
+  
+```{r over60}
+americas_nogdp <- mutate(americas_nogdp, 
+                         lifeExp60 = if_else(lifeExp > 60, "over 60", "not over 60"))
+
+```
+
+
+
+
+# group_by and summarize to calculate the mean gdp by continent
+  Use the %>% operators to string together multiple actions on the same dataset.         
+    https://style.tidyverse.org/pipes.html 
+ 
+
+```{r}
+gapminder %>%
+  group_by(continent) %>%
+  summarise(avg_gdp = mean(gdpPercap, na.rm = TRUE))
+```
+
+
+```{r}
+gapminder %>%
+  group_by(continent, country) %>%
+  summarise(avg_gdp = mean(gdpPercap, na.rm = TRUE))
+```
+
+
+
+6. graphs
+```{r graph}
+ggplot(americas, aes(x=year, y=lifeExp, color=country)) + 
+    geom_point(size=1) 
+
+```
